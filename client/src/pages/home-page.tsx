@@ -15,52 +15,23 @@ import {
   CheckCircle
 } from "lucide-react";
 
-const tiers = [
-  {
-    name: "Starter",
-    price: 500,
-    range: "$100K - $350K",
-    features: [
-      "Secure document upload",
-      "Investor messaging", 
-      "Video call scheduling",
-      "30-day listing period"
-    ]
-  },
-  {
-    name: "Growth",
-    price: 1000,
-    range: "$350K - $1M",
-    features: [
-      "Priority placement",
-      "Enhanced investor matching",
-      "All Starter features",
-      "45-day listing period"
-    ],
-    popular: true
-  },
-  {
-    name: "Scale", 
-    price: 2500,
-    range: "$1M - $3M",
-    features: [
-      "Premium placement",
-      "Dedicated account manager",
-      "All Growth features",
-      "60-day listing period"
-    ]
-  },
-  {
-    name: "Enterprise",
-    price: 5000,
-    range: "$3M - $25M", 
-    features: [
-      "Featured placement",
-      "White-glove service",
-      "Custom matching criteria",
-      "90-day listing period"
-    ]
-  }
+const investmentRanges = [
+  { label: "$5K - $350K", value: "5k-350k" },
+  { label: "$350K - $1M", value: "350k-1M" },
+  { label: "$1M - $3M", value: "1M-3M" },
+  { label: "$3M - $5M", value: "3M-5M" },
+  { label: "$5M - $10M", value: "5M-10M" },
+  { label: "$10M - $25M", value: "10M-25M" },
+  { label: "Above $25M", value: "above-25M" }
+];
+
+const listingFeatures = [
+  "Secure document upload",
+  "Direct investor messaging", 
+  "Video call scheduling",
+  "90-day listing period",
+  "Professional presentation",
+  "Access to qualified investors"
 ];
 
 export default function HomePage() {
@@ -185,26 +156,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Investment Tiers */}
+      {/* Investment Ranges & Pricing */}
       <section id="pricing" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Investment Tiers & Listing Fees</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Choose the appropriate tier for your funding request. Professional documentation and verification included.
+              One flat fee for all equity injection requests, regardless of investment amount.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tiers.map((tier) => (
-              <InvestmentTierCard key={tier.name} tier={tier} />
-            ))}
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-2 border-primary">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">Listing Fee</h3>
+                <div className="text-6xl font-bold text-primary mb-6 font-mono">$150</div>
+                <p className="text-lg text-slate-600 mb-8">
+                  One-time fee for 90-day listing across all investment ranges
+                </p>
+                
+                <div className="bg-slate-50 rounded-lg p-6 mb-8">
+                  <h4 className="font-semibold text-slate-900 mb-4">Available Investment Ranges</h4>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    {investmentRanges.map((range) => (
+                      <div key={range.value} className="flex items-center">
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                        {range.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="space-y-3 text-sm text-slate-700 mb-8">
+                  {listingFeatures.map((feature, index) => (
+                    <div key={index} className="flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+                
+                <Button 
+                  size="lg"
+                  onClick={handleGetStarted}
+                  className="w-full"
+                >
+                  Get Started Today
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="mt-12 text-center">
             <p className="text-sm text-slate-600">
-              * All tiers include secure document management, investor communication tools, and video call scheduling.
-              <br />No transaction fees or commissions. Platform acts as connection facilitator only.
+              * No transaction fees or commissions. Platform acts as connection facilitator only.
+              <br />All features included regardless of investment amount.
             </p>
           </div>
         </div>

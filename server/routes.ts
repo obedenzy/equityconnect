@@ -12,13 +12,8 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-// Tier pricing structure
-const TIER_PRICING = {
-  starter: 500,
-  growth: 1000,
-  scale: 2500,
-  enterprise: 5000,
-};
+// Flat fee for all listings
+const LISTING_FEE = 150;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
@@ -34,7 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const listingData = insertListingSchema.parse({
         ...req.body,
         buyerId: req.user.id,
-        listingFee: TIER_PRICING[req.body.tier as keyof typeof TIER_PRICING],
+        listingFee: LISTING_FEE,
         expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
       });
 
@@ -91,12 +86,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      const { listingId, tier } = req.body;
-      const amount = TIER_PRICING[tier as keyof typeof TIER_PRICING];
-
-      if (!amount) {
-        return res.status(400).json({ message: "Invalid tier" });
-      }
+      const { listingId } = req.body;
+      const amount = LISTING_FEE;
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount * 100, // Convert to cents
@@ -256,9 +247,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get tier pricing
-  app.get("/api/tier-pricing", (req, res) => {
-    res.json(TIER_PRICING);
+  // Get listing fee
+  app.get("/api/listing-fee", (req, res) => {
+    res.json({ fee: LISTING_FEE });
   });
 
   const httpServer = createServer(app);

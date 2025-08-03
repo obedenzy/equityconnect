@@ -32,7 +32,7 @@ Preferred communication style: Simple, everyday language.
 - **Primary Database**: PostgreSQL with Neon serverless connection pooling
 - **Schema Management**: Drizzle Kit for migrations and schema evolution
 - **Key Entities**: Users (buyers/investors), Listings (with tier-based pricing), Documents (with access controls), Conversations, Messages, Video Call Requests
-- **Tiered Investment Structure**: Four investment tiers (Starter: $100K-$350K, Growth: $350K-$1M, Scale: $1M-$3M, Enterprise: $3M-$25M)
+- **Investment Structure**: Seven investment ranges ($5K-$350K, $350K-$1M, $1M-$3M, $3M-$5M, $5M-$10M, $10M-$25M, Above $25M) with flat $150 listing fee
 
 ### Authentication & Authorization
 - **User Roles**: Strict role-based access with buyers and investors having different capabilities
@@ -43,7 +43,7 @@ Preferred communication style: Simple, everyday language.
 ### Payment Processing
 - **Provider**: Stripe with separate public/secret key configuration
 - **Flow**: Intent-based payments for listing fees with confirmation webhooks
-- **Pricing Structure**: Tier-based listing fees ($500-$5000) based on investment amount ranges
+- **Pricing Structure**: Flat $150 listing fee for all investment ranges
 
 ### Document Management
 - **Upload System**: Drag-and-drop interface with progress tracking

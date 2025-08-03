@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Building2, TrendingUp } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,8 +29,12 @@ const registerSchema = z.object({
   company: z.string().optional(),
   phone: z.string().optional(),
   bio: z.string().optional(),
+  // Investor-specific fields
   preferredReturnType: z.enum(["repayment", "equity", "both"]).optional(),
-  investmentFocus: z.array(z.string()).optional(),
+  investmentFocus: z.array(z.enum(["sba_loan", "non_sba_acquisition", "real_estate"])).optional(),
+  preferredIndustry: z.array(z.enum(["retail", "franchise", "manufacturing", "healthcare", "technology", "services", "commercial", "multi_family", "industrial", "hospitality"])).optional(),
+  preferredLocation: z.string().optional(),
+  preferredInvestmentRange: z.enum(["5k-350k", "350k-1M", "1M-3M", "3M-5M", "5M-10M", "10M-25M", "above-25M"]).optional(),
 });
 
 type LoginData = z.infer<typeof loginSchema>;
@@ -62,6 +67,9 @@ export default function AuthPage() {
       bio: "",
       preferredReturnType: "both",
       investmentFocus: [],
+      preferredIndustry: [],
+      preferredLocation: "",
+      preferredInvestmentRange: "5k-350k",
     },
   });
 
@@ -77,7 +85,13 @@ export default function AuthPage() {
   };
 
   const handleRegister = async (data: RegisterData) => {
-    registerMutation.mutate(data);
+    // Convert arrays to proper format for database
+    const formattedData = {
+      ...data,
+      investmentFocus: data.investmentFocus || [],
+      preferredIndustry: data.preferredIndustry || [],
+    };
+    registerMutation.mutate(formattedData);
   };
 
   if (user) {
@@ -244,22 +258,124 @@ export default function AuthPage() {
                     </div>
 
                     {registerForm.watch("role") === "investor" && (
-                      <div>
-                        <Label htmlFor="preferredReturnType">Preferred Return Type</Label>
-                        <Select 
-                          value={registerForm.watch("preferredReturnType")} 
-                          onValueChange={(value) => registerForm.setValue("preferredReturnType", value as "repayment" | "equity" | "both")}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select return preference" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="repayment">Repayment</SelectItem>
-                            <SelectItem value="equity">Equity</SelectItem>
-                            <SelectItem value="both">Both</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <>
+                        {/* Investment Focus */}
+                        <div>
+                          <Label>Investment Focus</Label>
+                          <div className="space-y-2 mt-2">
+                            {[
+                              { value: "sba_loan" as const, label: "SBA Loan" },
+                              { value: "non_sba_acquisition" as const, label: "Non-SBA Acquisition" },
+                              { value: "real_estate" as const, label: "Real Estate" }
+                            ].map((option) => (
+                              <div key={option.value} className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={`investmentFocus-${option.value}`}
+                                  checked={(registerForm.watch("investmentFocus") || []).includes(option.value)}
+                                  onCheckedChange={(checked) => {
+                                    const current = registerForm.watch("investmentFocus") || [];
+                                    if (checked) {
+                                      registerForm.setValue("investmentFocus", [...current, option.value]);
+                                    } else {
+                                      registerForm.setValue("investmentFocus", current.filter(v => v !== option.value));
+                                    }
+                                  }}
+                                />
+                                <Label htmlFor={`investmentFocus-${option.value}`} className="text-sm font-normal">
+                                  {option.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Preferred Industry */}
+                        <div>
+                          <Label>Preferred Industry</Label>
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            {[
+                              { value: "retail" as const, label: "Retail" },
+                              { value: "franchise" as const, label: "Franchise" },
+                              { value: "manufacturing" as const, label: "Manufacturing" },
+                              { value: "healthcare" as const, label: "Healthcare" },
+                              { value: "technology" as const, label: "Technology" },
+                              { value: "services" as const, label: "Services" },
+                              { value: "commercial" as const, label: "Commercial" },
+                              { value: "multi_family" as const, label: "Multi-Family" },
+                              { value: "industrial" as const, label: "Industrial" },
+                              { value: "hospitality" as const, label: "Hospitality" }
+                            ].map((option) => (
+                              <div key={option.value} className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={`preferredIndustry-${option.value}`}
+                                  checked={(registerForm.watch("preferredIndustry") || []).includes(option.value)}
+                                  onCheckedChange={(checked) => {
+                                    const current = registerForm.watch("preferredIndustry") || [];
+                                    if (checked) {
+                                      registerForm.setValue("preferredIndustry", [...current, option.value]);
+                                    } else {
+                                      registerForm.setValue("preferredIndustry", current.filter(v => v !== option.value));
+                                    }
+                                  }}
+                                />
+                                <Label htmlFor={`preferredIndustry-${option.value}`} className="text-sm font-normal">
+                                  {option.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Preferred Location */}
+                        <div>
+                          <Label htmlFor="preferredLocation">Preferred Location</Label>
+                          <Input
+                            id="preferredLocation"
+                            {...registerForm.register("preferredLocation")}
+                            placeholder="e.g., California, New York, Texas"
+                          />
+                        </div>
+
+                        {/* Investment Range */}
+                        <div>
+                          <Label htmlFor="preferredInvestmentRange">Investment Range</Label>
+                          <Select 
+                            value={registerForm.watch("preferredInvestmentRange")} 
+                            onValueChange={(value) => registerForm.setValue("preferredInvestmentRange", value as any)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select investment range" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="5k-350k">$5k - $350k</SelectItem>
+                              <SelectItem value="350k-1M">$350k - $1M</SelectItem>
+                              <SelectItem value="1M-3M">$1M - $3M</SelectItem>
+                              <SelectItem value="3M-5M">$3M - $5M</SelectItem>
+                              <SelectItem value="5M-10M">$5M - $10M</SelectItem>
+                              <SelectItem value="10M-25M">$10M - $25M</SelectItem>
+                              <SelectItem value="above-25M">Above $25M</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Investment Preference */}
+                        <div>
+                          <Label htmlFor="preferredReturnType">Investment Preference</Label>
+                          <Select 
+                            value={registerForm.watch("preferredReturnType")} 
+                            onValueChange={(value) => registerForm.setValue("preferredReturnType", value as "repayment" | "equity" | "both")}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select investment preference" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="repayment">Repayment</SelectItem>
+                              <SelectItem value="equity">Equity</SelectItem>
+                              <SelectItem value="both">Both</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
                     )}
 
                     <div>

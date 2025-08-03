@@ -5,9 +5,11 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const userRoleEnum = pgEnum("user_role", ["buyer", "investor"]);
-export const investmentTierEnum = pgEnum("investment_tier", ["starter", "growth", "scale", "enterprise"]);
+export const investmentRangeEnum = pgEnum("investment_range", ["5k-350k", "350k-1M", "1M-3M", "3M-5M", "5M-10M", "10M-25M", "above-25M"]);
 export const marketTypeEnum = pgEnum("market_type", ["business", "real_estate"]);
 export const returnTypeEnum = pgEnum("return_type", ["repayment", "equity", "both"]);
+export const investmentFocusEnum = pgEnum("investment_focus", ["sba_loan", "non_sba_acquisition", "real_estate"]);
+export const industryTypeEnum = pgEnum("industry_type", ["retail", "franchise", "manufacturing", "healthcare", "technology", "services", "commercial", "multi_family", "industrial", "hospitality"]);
 export const listingStatusEnum = pgEnum("listing_status", ["active", "pending", "closed", "expired"]);
 export const messageStatusEnum = pgEnum("message_status", ["sent", "delivered", "read"]);
 
@@ -24,7 +26,10 @@ export const users = pgTable("users", {
   bio: text("bio"),
   stripeCustomerId: text("stripe_customer_id"),
   preferredReturnType: returnTypeEnum("preferred_return_type"),
-  investmentFocus: text("investment_focus").array(),
+  investmentFocus: investmentFocusEnum("investment_focus").array(),
+  preferredIndustry: industryTypeEnum("preferred_industry").array(),
+  preferredLocation: text("preferred_location"),
+  preferredInvestmentRange: investmentRangeEnum("preferred_investment_range"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -35,7 +40,7 @@ export const listings = pgTable("listings", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
-  tier: investmentTierEnum("tier").notNull(),
+  investmentRange: investmentRangeEnum("investment_range").notNull(),
   marketType: marketTypeEnum("market_type").notNull(),
   location: text("location"),
   industryType: text("industry_type"),
