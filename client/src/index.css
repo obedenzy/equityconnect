@@ -1,0 +1,839 @@
+@tailwind base;
+@tailwind components;  
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222, 84%, 5%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 84%, 5%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 84%, 5%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --primary: hsl(217, 91%, 60%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(215, 25%, 27%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(215, 25%, 27%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(217, 91%, 60%);
+  --radius: 0.5rem;
+  
+  /* Professional Financial Color Palette - Matching Design Reference */
+  --financial-blue: hsl(217, 71%, 34%);
+  --financial-lightblue: hsl(217, 91%, 60%);
+  --financial-success: hsl(142, 71%, 45%);
+  --financial-warning: hsl(38, 92%, 50%);
+  --financial-error: hsl(0, 84%, 60%);
+  
+  /* Extended Professional Palette */
+  --slate-50: hsl(210, 40%, 98%);
+  --slate-100: hsl(210, 40%, 96%);
+  --slate-200: hsl(214, 32%, 91%);
+  --slate-300: hsl(213, 27%, 84%);
+  --slate-400: hsl(215, 20%, 65%);
+  --slate-500: hsl(215, 16%, 47%);
+  --slate-600: hsl(215, 19%, 35%);
+  --slate-700: hsl(215, 25%, 27%);
+  --slate-800: hsl(217, 33%, 17%);
+  --slate-900: hsl(222, 84%, 5%);
+  
+  /* Blue Variants - Primary Brand Colors */
+  --blue-50: hsl(214, 100%, 97%);
+  --blue-100: hsl(214, 95%, 93%);
+  --blue-200: hsl(213, 97%, 87%);
+  --blue-300: hsl(212, 96%, 78%);
+  --blue-400: hsl(213, 94%, 68%);
+  --blue-500: hsl(217, 91%, 60%);
+  --blue-600: hsl(221, 83%, 53%);
+  --blue-700: hsl(224, 76%, 48%);
+  --blue-800: hsl(226, 71%, 40%);
+  --blue-900: hsl(224, 64%, 33%);
+  
+  /* Success Green Palette */
+  --green-50: hsl(138, 76%, 97%);
+  --green-100: hsl(141, 84%, 93%);
+  --green-200: hsl(141, 79%, 85%);
+  --green-300: hsl(142, 77%, 73%);
+  --green-400: hsl(142, 69%, 58%);
+  --green-500: hsl(142, 71%, 45%);
+  --green-600: hsl(142, 76%, 36%);
+  --green-700: hsl(142, 72%, 29%);
+  --green-800: hsl(143, 64%, 24%);
+  --green-900: hsl(144, 61%, 20%);
+  
+  /* Warning Orange/Yellow Palette */
+  --yellow-50: hsl(55, 92%, 95%);
+  --yellow-100: hsl(55, 97%, 88%);
+  --yellow-200: hsl(53, 98%, 77%);
+  --yellow-300: hsl(50, 98%, 64%);
+  --yellow-400: hsl(48, 96%, 53%);
+  --yellow-500: hsl(45, 93%, 47%);
+  --yellow-600: hsl(41, 96%, 40%);
+  --yellow-700: hsl(35, 91%, 33%);
+  --yellow-800: hsl(32, 81%, 29%);
+  --yellow-900: hsl(28, 73%, 26%);
+  
+  /* Error Red Palette */
+  --red-50: hsl(0, 86%, 97%);
+  --red-100: hsl(0, 93%, 94%);
+  --red-200: hsl(0, 96%, 89%);
+  --red-300: hsl(0, 94%, 82%);
+  --red-400: hsl(0, 91%, 71%);
+  --red-500: hsl(0, 84%, 60%);
+  --red-600: hsl(0, 72%, 51%);
+  --red-700: hsl(0, 74%, 42%);
+  --red-800: hsl(0, 70%, 35%);
+  --red-900: hsl(0, 63%, 31%);
+  
+  /* Purple Palette for Premium Features */
+  --purple-50: hsl(270, 100%, 98%);
+  --purple-100: hsl(269, 100%, 95%);
+  --purple-200: hsl(269, 100%, 92%);
+  --purple-300: hsl(269, 97%, 85%);
+  --purple-400: hsl(270, 95%, 75%);
+  --purple-500: hsl(271, 91%, 65%);
+  --purple-600: hsl(271, 81%, 56%);
+  --purple-700: hsl(272, 72%, 47%);
+  --purple-800: hsl(272, 67%, 39%);
+  --purple-900: hsl(273, 66%, 32%);
+}
+
+.dark {
+  --background: hsl(222, 84%, 5%);
+  --foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217, 33%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --popover: hsl(222, 84%, 5%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --card: hsl(222, 84%, 5%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217, 33%, 17%);
+  --input: hsl(217, 33%, 17%);
+  --primary: hsl(217, 91%, 60%);
+  --primary-foreground: hsl(222, 84%, 5%);
+  --secondary: hsl(217, 33%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(217, 33%, 17%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(217, 91%, 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-variation-settings: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+    font-weight: 600;
+  }
+
+  h4 {
+    @apply text-lg md:text-xl;
+    font-weight: 600;
+  }
+
+  h5 {
+    @apply text-base md:text-lg;
+    font-weight: 600;
+  }
+
+  h6 {
+    @apply text-sm md:text-base;
+    font-weight: 600;
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  pre {
+    @apply overflow-x-auto rounded-lg border bg-muted p-4;
+  }
+
+  blockquote {
+    @apply border-l-4 border-primary pl-4 italic;
+  }
+}
+
+@layer utilities {
+  /* Financial Brand Colors */
+  .text-financial-blue {
+    color: var(--financial-blue);
+  }
+  
+  .bg-financial-blue {
+    background-color: var(--financial-blue);
+  }
+  
+  .border-financial-blue {
+    border-color: var(--financial-blue);
+  }
+  
+  .text-financial-lightblue {
+    color: var(--financial-lightblue);
+  }
+  
+  .bg-financial-lightblue {
+    background-color: var(--financial-lightblue);
+  }
+  
+  .text-financial-success {
+    color: var(--financial-success);
+  }
+  
+  .bg-financial-success {
+    background-color: var(--financial-success);
+  }
+  
+  .border-financial-success {
+    border-color: var(--financial-success);
+  }
+  
+  .text-financial-warning {
+    color: var(--financial-warning);
+  }
+  
+  .bg-financial-warning {
+    background-color: var(--financial-warning);
+  }
+  
+  .text-financial-error {
+    color: var(--financial-error);
+  }
+  
+  .bg-financial-error {
+    background-color: var(--financial-error);
+  }
+
+  /* Professional Button Styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    background-color: var(--financial-blue);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--blue-800);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border-2 border-primary bg-background px-4 py-2 text-sm font-medium text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    border-color: var(--financial-blue);
+    color: var(--financial-blue);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--financial-blue);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .btn-success {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    background-color: var(--financial-success);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .btn-success:hover {
+    background-color: var(--green-700);
+  }
+
+  /* Professional Card Styles */
+  .card-professional {
+    @apply rounded-xl border bg-card text-card-foreground shadow-lg transition-shadow duration-300 hover:shadow-xl;
+    border-color: var(--border);
+    box-shadow: 0 4px 6px -1px hsl(0, 0%, 0%, 0.1), 0 2px 4px -1px hsl(0, 0%, 0%, 0.06);
+  }
+
+  .card-professional:hover {
+    box-shadow: 0 20px 25px -5px hsl(0, 0%, 0%, 0.1), 0 10px 10px -5px hsl(0, 0%, 0%, 0.04);
+  }
+
+  .card-tier {
+    @apply rounded-xl border-2 bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-xl;
+  }
+
+  .card-tier-popular {
+    border-color: var(--financial-blue);
+    background-color: var(--blue-50);
+  }
+
+  .card-tier:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px hsl(0, 0%, 0%, 0.1), 0 10px 10px -5px hsl(0, 0%, 0%, 0.04);
+  }
+
+  /* Financial Data Display */
+  .financial-amount {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-weight: 700;
+    color: var(--financial-blue);
+    letter-spacing: -0.025em;
+  }
+
+  .financial-label {
+    @apply text-sm font-medium uppercase tracking-wide;
+    color: var(--slate-600);
+    letter-spacing: 0.05em;
+  }
+
+  /* Investment Amount Display */
+  .investment-display {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+    color: var(--financial-blue);
+    letter-spacing: -0.025em;
+  }
+
+  /* Status Badges */
+  .status-active {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--financial-success);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .status-pending {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--financial-warning);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .status-inactive {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--slate-400);
+    color: hsl(210, 40%, 98%);
+  }
+
+  /* Investment Tier Specific Colors */
+  .tier-starter {
+    @apply border;
+    background-color: var(--slate-100);
+    color: var(--slate-700);
+    border-color: var(--slate-300);
+  }
+
+  .tier-growth {
+    @apply border;
+    background-color: var(--blue-100);
+    color: var(--blue-700);
+    border-color: var(--blue-300);
+  }
+
+  .tier-scale {
+    @apply border;
+    background-color: var(--purple-100);
+    color: var(--purple-700);
+    border-color: var(--purple-300);
+  }
+
+  .tier-enterprise {
+    @apply border;
+    background-color: var(--yellow-100);
+    color: var(--yellow-700);
+    border-color: var(--yellow-300);
+  }
+
+  /* Professional Navigation */
+  .nav-link {
+    @apply px-3 py-2 text-sm font-medium transition-colors duration-200;
+    color: var(--slate-700);
+  }
+
+  .nav-link:hover {
+    color: var(--financial-blue);
+  }
+
+  .nav-link-active {
+    color: var(--financial-blue);
+    border-bottom: 2px solid var(--financial-blue);
+  }
+
+  /* Form Styling */
+  .form-input {
+    @apply w-full rounded-lg border px-3 py-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    border-color: var(--border);
+    background-color: var(--background);
+  }
+
+  .form-input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px var(--financial-blue);
+  }
+
+  .form-label {
+    @apply block text-sm font-medium mb-2;
+    color: var(--slate-700);
+  }
+
+  /* Message Styling */
+  .message-bubble {
+    @apply rounded-lg px-4 py-2 max-w-xs lg:max-w-md;
+  }
+
+  .message-sent {
+    background-color: var(--financial-blue);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .message-received {
+    background-color: var(--slate-100);
+    color: var(--slate-900);
+  }
+
+  /* Professional Spacing */
+  .section-padding {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Gradient Backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(217, 71%, 34%) 100%);
+  }
+
+  .gradient-hero {
+    background: linear-gradient(135deg, hsl(210, 40%, 98%) 0%, hsl(214, 100%, 97%) 100%);
+  }
+
+  .gradient-financial {
+    background: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(224, 76%, 48%) 50%, hsl(217, 71%, 34%) 100%);
+  }
+
+  /* Professional Shadows */
+  .shadow-professional {
+    box-shadow: 0 4px 6px -1px hsl(0, 0%, 0%, 0.1), 0 2px 4px -1px hsl(0, 0%, 0%, 0.06);
+  }
+
+  .shadow-professional-lg {
+    box-shadow: 0 10px 15px -3px hsl(0, 0%, 0%, 0.1), 0 4px 6px -2px hsl(0, 0%, 0%, 0.05);
+  }
+
+  .shadow-professional-xl {
+    box-shadow: 0 20px 25px -5px hsl(0, 0%, 0%, 0.1), 0 10px 10px -5px hsl(0, 0%, 0%, 0.04);
+  }
+
+  /* Text Utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Loading Animations */
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Professional Focus States */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    --tw-ring-color: var(--financial-blue);
+  }
+
+  /* Document Security Styling */
+  .document-secure {
+    @apply rounded-lg border p-4;
+    background-color: var(--blue-50);
+    border-color: var(--blue-200);
+  }
+
+  .document-redacted {
+    @apply rounded-lg border p-2;
+    background-color: var(--green-50);
+    border-color: var(--green-200);
+  }
+
+  .document-access-granted {
+    @apply rounded-lg border p-2;
+    background-color: var(--green-50);
+    border-color: var(--green-200);
+  }
+
+  /* Professional Table Styling */
+  .table-professional {
+    @apply w-full divide-y;
+    border-collapse: separate;
+    border-spacing: 0;
+    divide-color: var(--slate-200);
+  }
+
+  .table-header {
+    @apply px-6 py-3 text-left text-xs font-medium uppercase tracking-wider;
+    background-color: var(--slate-50);
+    color: var(--slate-500);
+  }
+
+  .table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm;
+    color: var(--slate-900);
+  }
+
+  /* Typography Scale */
+  .text-financial-xl {
+    @apply text-xl font-semibold;
+    color: var(--financial-blue);
+  }
+
+  .text-financial-2xl {
+    @apply text-2xl font-bold;
+    color: var(--financial-blue);
+  }
+
+  .text-financial-3xl {
+    @apply text-3xl font-bold;
+    color: var(--financial-blue);
+  }
+
+  /* Interactive Elements */
+  .interactive-scale {
+    @apply transition-transform duration-200 hover:scale-105 active:scale-95;
+  }
+
+  .interactive-glow {
+    @apply transition-shadow duration-300;
+  }
+
+  .interactive-glow:hover {
+    box-shadow: 0 0 20px hsl(217, 91%, 60%, 0.3);
+  }
+
+  /* Professional Alert Styles */
+  .alert-info {
+    @apply rounded-lg border p-4;
+    background-color: var(--blue-50);
+    border-color: var(--blue-200);
+    color: var(--blue-800);
+  }
+
+  .alert-success {
+    @apply rounded-lg border p-4;
+    background-color: var(--green-50);
+    border-color: var(--green-200);
+    color: var(--green-800);
+  }
+
+  .alert-warning {
+    @apply rounded-lg border p-4;
+    background-color: var(--yellow-50);
+    border-color: var(--yellow-200);
+    color: var(--yellow-800);
+  }
+
+  .alert-error {
+    @apply rounded-lg border p-4;
+    background-color: var(--red-50);
+    border-color: var(--red-200);
+    color: var(--red-800);
+  }
+
+  /* Progress Indicators */
+  .progress-bar {
+    @apply h-2 overflow-hidden rounded-full;
+    background-color: var(--slate-200);
+  }
+
+  .progress-fill {
+    @apply h-full transition-all duration-300 ease-out;
+    background-color: var(--financial-blue);
+  }
+
+  /* Tier Badge Variations */
+  .badge-tier-starter {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--slate-100);
+    color: var(--slate-700);
+  }
+
+  .badge-tier-growth {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--blue-100);
+    color: var(--blue-700);
+  }
+
+  .badge-tier-scale {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--purple-100);
+    color: var(--purple-700);
+  }
+
+  .badge-tier-enterprise {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--yellow-100);
+    color: var(--yellow-700);
+  }
+}
+
+/* Custom Scrollbar Styling */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--slate-400) var(--slate-100);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background-color: var(--slate-100);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--slate-400);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: var(--slate-500);
+}
+
+/* Professional Print Styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-visible {
+    display: block !important;
+  }
+
+  .print-break {
+    page-break-before: always;
+  }
+
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: hsl(0, 0%, 20%);
+    --financial-blue: hsl(217, 100%, 25%);
+    --financial-lightblue: hsl(217, 100%, 45%);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .dark-auto {
+    --background: hsl(222, 84%, 5%);
+    --foreground: hsl(210, 40%, 98%);
+    --card: hsl(222, 84%, 5%);
+    --card-foreground: hsl(210, 40%, 98%);
+    --popover: hsl(222, 84%, 5%);
+    --popover-foreground: hsl(210, 40%, 98%);
+    --primary: hsl(217, 91%, 60%);
+    --primary-foreground: hsl(222, 84%, 5%);
+    --secondary: hsl(217, 33%, 17%);
+    --secondary-foreground: hsl(210, 40%, 98%);
+    --muted: hsl(217, 33%, 17%);
+    --muted-foreground: hsl(215, 20%, 65%);
+    --accent: hsl(217, 33%, 17%);
+    --accent-foreground: hsl(210, 40%, 98%);
+    --destructive: hsl(0, 63%, 31%);
+    --destructive-foreground: hsl(210, 40%, 98%);
+    --border: hsl(217, 33%, 17%);
+    --input: hsl(217, 33%, 17%);
+    --ring: hsl(217, 91%, 60%);
+  }
+}
+
+/* Selection Styling */
+::selection {
+  background-color: var(--financial-lightblue);
+  color: hsl(210, 40%, 98%);
+}
+
+::-moz-selection {
+  background-color: var(--financial-lightblue);
+  color: hsl(210, 40%, 98%);
+}
+
+/* Focus Visible Support */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--financial-blue);
+  outline-offset: 2px;
+}
+
+/* Professional Loading States */
+.skeleton {
+  @apply animate-pulse;
+  background: linear-gradient(
+    90deg,
+    var(--slate-200) 25%,
+    var(--slate-100) 50%,
+    var(--slate-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Professional Modal Backdrop */
+.modal-backdrop {
+  background-color: hsl(0, 0%, 0%, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Investment Card Hover Effects */
+.investment-card {
+  @apply transition-all duration-300 ease-out;
+}
+
+.investment-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 25px 50px -12px hsl(0, 0%, 0%, 0.25);
+}
+
+/* Professional Input Focus */
+.input-focus:focus {
+  box-shadow: 0 0 0 3px var(--financial-blue), 0 1px 3px 0 hsl(0, 0%, 0%, 0.1);
+}
+
+/* Error State Styling */
+.error-state {
+  @apply border-2 rounded-lg p-4;
+  border-color: var(--financial-error);
+  background-color: var(--red-50);
+  color: var(--red-800);
+}
+
+/* Success State Styling */
+.success-state {
+  @apply border-2 rounded-lg p-4;
+  border-color: var(--financial-success);
+  background-color: var(--green-50);
+  color: var(--green-800);
+}
+
+/* Professional Tooltip */
+.tooltip {
+  @apply rounded-lg border px-3 py-2 text-sm shadow-lg;
+  background-color: var(--popover);
+  border-color: var(--border);
+  color: var(--popover-foreground);
+}
+
+/* Financial Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Professional Breadcrumb */
+.breadcrumb {
+  @apply flex items-center space-x-2 text-sm;
+  color: var(--muted-foreground);
+}
+
+.breadcrumb-separator {
+  color: var(--muted-foreground);
+}
+
+.breadcrumb-current {
+  color: var(--foreground);
+  font-weight: 500;
+}
