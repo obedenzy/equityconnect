@@ -1,0 +1,181 @@
+Develop a web application on Replit to connect business and real estate buyers seeking 10% equity injections for SBA and non-SBA acquisition loans with investors willing to provide the funds. The platform will facilitate connections through a listing-based system, charging listing fees to buyers, with features like tiered investment groups, video call integration, secure LOI and termsheet uploads, and inbox-style communication. The app will support both business and real estate equity injection markets, with no SEC compliance or legal liability, acting solely as a connection platform.
+
+Functional Requirements
+
+
+
+
+
+User Roles:
+
+
+
+
+
+Users can register as either Buyers or Investors (not both).
+
+
+
+Buyers can post funding requests for business or real estate equity injections.
+
+
+
+Investors can browse and respond to requests but cannot post funding requests.
+
+
+
+Tiered Investment Groups:
+
+
+
+
+
+Funding requests are categorized into tiers based on the equity injection amount:
+
+
+
+
+
+$100,000 to $350,000
+
+
+
+$350,001 to $1,000,000
+
+
+
+$1,000,001 to $3,000,000
+
+
+
+$3,000,001 to $25,000,000
+
+
+
+Separate listings for Business Equity Injection and Real Estate Equity Injection.
+
+
+
+LOI and Termsheet Uploads:
+
+
+
+
+
+Buyers must upload a Letter of Intent (LOI) and termsheet when posting a funding request.
+
+
+
+Buyers can redact sensitive information (e.g., company name, seller name, address) in the uploaded documents until they grant access to specific investors.
+
+
+
+Investors must receive a code via email and enter it, along with typing their name and clicking "Accept," to view the LOI and termsheet.
+
+
+
+Investors can view documents but cannot download them until the buyer grants download access.
+
+
+
+Communication:
+
+
+
+
+
+All communication occurs via an inbox-style system within the platform (not real-time chat).
+
+
+
+No email addresses are exposed to users.
+
+
+
+Buyers and investors communicate through messages, with the option to initiate video calls for discussions.
+
+
+
+Video Call Integration:
+
+
+
+
+
+Integrate a third-party video call API (e.g., Whereby or Vonage) to allow buyers and investors to schedule and conduct video calls within the platform, reducing email exchanges.
+
+
+
+Video calls are initiated from the inbox system, with links generated for scheduled meetings.
+
+
+
+Investor Preferences:
+
+
+
+
+
+Investors can specify their preferred return type: repayment, equity, or both.
+
+
+
+Investors can filter funding requests by tier, market (business or real estate), and return type.
+
+
+
+Listing Fee Structure:
+
+
+
+
+
+Buyers pay a listing fee to post a funding request.
+
+
+
+Suggested fee structure (adjustable based on market research):
+
+
+
+
+
+$100,000–$350,000 tier: $500 per listing
+
+
+
+$350,001–$1,000,000 tier: $1,000 per listing
+
+
+
+$1,000,001–$3,000,000 tier: $2,500 per listing
+
+
+
+$3,000,001–$25,000,000 tier: $5,000 per listing
+
+
+
+No transaction fees or commissions to avoid legal liability or SEC compliance.
+
+
+
+Fees are collected via a payment gateway (e.g., Stripe) upon posting.
+
+
+
+Platform Liability:
+
+
+
+
+
+The platform acts solely as a connection facilitator, not a broker or financial intermediary.
+
+
+
+Buyers are responsible for redacting sensitive information in LOI and termsheet documents.
+
+
+
+Clear terms of service stating the platform is not liable for legal issues or transaction outcomes.
