@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
@@ -15,12 +16,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
 const registerSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   firstName: z.string().min(1, "First name is required"),
@@ -48,7 +48,7 @@ export default function AuthPage() {
   const loginForm = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -56,7 +56,6 @@ export default function AuthPage() {
   const registerForm = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
       firstName: "",
@@ -128,13 +127,14 @@ export default function AuthPage() {
                 <CardContent>
                   <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                     <div>
-                      <Label htmlFor="username">Username</Label>
+                      <Label htmlFor="email">Email</Label>
                       <Input
-                        id="username"
-                        {...loginForm.register("username")}
+                        id="email"
+                        type="email"
+                        {...loginForm.register("email")}
                       />
-                      {loginForm.formState.errors.username && (
-                        <p className="text-sm text-red-500 mt-1">{loginForm.formState.errors.username.message}</p>
+                      {loginForm.formState.errors.email && (
+                        <p className="text-sm text-red-500 mt-1">{loginForm.formState.errors.email.message}</p>
                       )}
                     </div>
                     <div>
@@ -167,6 +167,22 @@ export default function AuthPage() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
+                    <div>
+                      <Label htmlFor="role">Role</Label>
+                      <Select 
+                        value={registerForm.watch("role")} 
+                        onValueChange={(value) => registerForm.setValue("role", value as "buyer" | "investor")}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="buyer">Buyer (Seeking Investment)</SelectItem>
+                          <SelectItem value="investor">Investor (Providing Funds)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName">First Name</Label>
@@ -191,17 +207,6 @@ export default function AuthPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="username">Username</Label>
-                      <Input
-                        id="username"
-                        {...registerForm.register("username")}
-                      />
-                      {registerForm.formState.errors.username && (
-                        <p className="text-sm text-red-500 mt-1">{registerForm.formState.errors.username.message}</p>
-                      )}
-                    </div>
-
-                    <div>
                       <Label htmlFor="email">Email</Label>
                       <Input
                         id="email"
@@ -223,22 +228,6 @@ export default function AuthPage() {
                       {registerForm.formState.errors.password && (
                         <p className="text-sm text-red-500 mt-1">{registerForm.formState.errors.password.message}</p>
                       )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="role">Role</Label>
-                      <Select 
-                        value={registerForm.watch("role")} 
-                        onValueChange={(value) => registerForm.setValue("role", value as "buyer" | "investor")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="buyer">Buyer (Seeking Investment)</SelectItem>
-                          <SelectItem value="investor">Investor (Providing Funds)</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
 
                     <div>

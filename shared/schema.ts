@@ -1,233 +1,92 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, decimal, pgEnum } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const userRoleEnum = pgEnum("user_role", ["buyer", "investor"]);
-export const investmentRangeEnum = pgEnum("investment_range", ["5k-350k", "350k-1M", "1M-3M", "3M-5M", "5M-10M", "10M-25M", "above-25M"]);
-export const marketTypeEnum = pgEnum("market_type", ["business", "real_estate"]);
-export const returnTypeEnum = pgEnum("return_type", ["repayment", "equity", "both"]);
-export const investmentFocusEnum = pgEnum("investment_focus", ["sba_loan", "non_sba_acquisition", "real_estate"]);
-export const industryTypeEnum = pgEnum("industry_type", ["retail", "franchise", "manufacturing", "healthcare", "technology", "services", "commercial", "multi_family", "industrial", "hospitality"]);
-export const listingStatusEnum = pgEnum("listing_status", ["active", "pending", "closed", "expired"]);
-export const messageStatusEnum = pgEnum("message_status", ["sent", "delivered", "read"]);
-
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  role: userRoleEnum("role").notNull(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
-  company: text("company"),
-  phone: text("phone"),
-  bio: text("bio"),
-  stripeCustomerId: text("stripe_customer_id"),
-  preferredReturnType: returnTypeEnum("preferred_return_type"),
-  investmentFocus: investmentFocusEnum("investment_focus").array(),
-  preferredIndustry: industryTypeEnum("preferred_industry").array(),
-  preferredLocation: text("preferred_location"),
-  preferredInvestmentRange: investmentRangeEnum("preferred_investment_range"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+export const userSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  first_name: z.string(),
+  last_name: z.string(),
+  role: z.enum(["buyer", "investor"]),
+  company: z.string().nullable(),
+  phone: z.string().nullable(),
+  bio: z.string().nullable(),
+  preferred_return_type: z.enum(["repayment", "equity", "both"]).nullable(),
+  investment_focus: z.array(z.string()).default([]),
+  preferred_industry: z.array(z.string()).default([]),
+  preferred_location: z.string().nullable(),
+  preferred_investment_range: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
 });
 
-export const listings = pgTable("listings", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  buyerId: varchar("buyer_id").notNull().references(() => users.id),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
-  investmentRange: investmentRangeEnum("investment_range").notNull(),
-  marketType: marketTypeEnum("market_type").notNull(),
-  location: text("location"),
-  industryType: text("industry_type"),
-  expectedReturns: text("expected_returns"),
-  timeframe: text("timeframe"),
-  status: listingStatusEnum("status").default("pending").notNull(),
-  featured: boolean("featured").default(false),
-  listingFee: decimal("listing_fee", { precision: 10, scale: 2 }).notNull(),
-  paymentIntentId: text("payment_intent_id"),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+export const insertUserSchema = userSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+}).extend({
+  password: z.string().min(6),
 });
 
-export const documents = pgTable("documents", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  listingId: varchar("listing_id").notNull().references(() => listings.id),
-  fileName: text("file_name").notNull(),
-  fileUrl: text("file_url").notNull(),
-  fileType: text("file_type").notNull(),
-  fileSize: integer("file_size").notNull(),
-  documentType: text("document_type").notNull(), // 'loi' or 'termsheet'
-  isRedacted: boolean("is_redacted").default(false),
-  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+export type User = z.infer<typeof userSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export const listingSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  description: z.string(),
+  fundingAmount: z.number(),
+  dealType: z.enum(["sba_loan", "non_sba_acquisition", "real_estate"]),
+  industry: z.string(),
+  location: z.string(),
+  timeline: z.string(),
+  userId: z.string(),
+  status: z.enum(["active", "funded", "closed"]).default("active"),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
-export const documentAccess = pgTable("document_access", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  documentId: varchar("document_id").notNull().references(() => documents.id),
-  investorId: varchar("investor_id").notNull().references(() => users.id),
-  canView: boolean("can_view").default(false),
-  canDownload: boolean("can_download").default(false),
-  verificationCode: text("verification_code"),
-  codeExpiresAt: timestamp("code_expires_at"),
-  accessGrantedAt: timestamp("access_granted_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const conversations = pgTable("conversations", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  listingId: varchar("listing_id").notNull().references(() => listings.id),
-  buyerId: varchar("buyer_id").notNull().references(() => users.id),
-  investorId: varchar("investor_id").notNull().references(() => users.id),
-  lastMessageAt: timestamp("last_message_at").defaultNow().notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const messages = pgTable("messages", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  conversationId: varchar("conversation_id").notNull().references(() => conversations.id),
-  senderId: varchar("sender_id").notNull().references(() => users.id),
-  content: text("content").notNull(),
-  status: messageStatusEnum("status").default("sent").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const videoCallRequests = pgTable("video_call_requests", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  conversationId: varchar("conversation_id").notNull().references(() => conversations.id),
-  requesterId: varchar("requester_id").notNull().references(() => users.id),
-  scheduledDate: timestamp("scheduled_date").notNull(),
-  agenda: text("agenda"),
-  meetingLink: text("meeting_link"),
-  status: text("status").default("pending").notNull(), // 'pending', 'accepted', 'declined', 'completed'
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-// Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  listings: many(listings),
-  sentMessages: many(messages),
-  documentAccess: many(documentAccess),
-  buyerConversations: many(conversations, { relationName: "buyerConversations" }),
-  investorConversations: many(conversations, { relationName: "investorConversations" }),
-}));
-
-export const listingsRelations = relations(listings, ({ one, many }) => ({
-  buyer: one(users, {
-    fields: [listings.buyerId],
-    references: [users.id],
-  }),
-  documents: many(documents),
-  conversations: many(conversations),
-}));
-
-export const documentsRelations = relations(documents, ({ one, many }) => ({
-  listing: one(listings, {
-    fields: [documents.listingId],
-    references: [listings.id],
-  }),
-  access: many(documentAccess),
-}));
-
-export const documentAccessRelations = relations(documentAccess, ({ one }) => ({
-  document: one(documents, {
-    fields: [documentAccess.documentId],
-    references: [documents.id],
-  }),
-  investor: one(users, {
-    fields: [documentAccess.investorId],
-    references: [users.id],
-  }),
-}));
-
-export const conversationsRelations = relations(conversations, ({ one, many }) => ({
-  listing: one(listings, {
-    fields: [conversations.listingId],
-    references: [listings.id],
-  }),
-  buyer: one(users, {
-    fields: [conversations.buyerId],
-    references: [users.id],
-    relationName: "buyerConversations",
-  }),
-  investor: one(users, {
-    fields: [conversations.investorId],
-    references: [users.id],
-    relationName: "investorConversations",
-  }),
-  messages: many(messages),
-  videoCallRequests: many(videoCallRequests),
-}));
-
-export const messagesRelations = relations(messages, ({ one }) => ({
-  conversation: one(conversations, {
-    fields: [messages.conversationId],
-    references: [conversations.id],
-  }),
-  sender: one(users, {
-    fields: [messages.senderId],
-    references: [users.id],
-  }),
-}));
-
-export const videoCallRequestsRelations = relations(videoCallRequests, ({ one }) => ({
-  conversation: one(conversations, {
-    fields: [videoCallRequests.conversationId],
-    references: [conversations.id],
-  }),
-  requester: one(users, {
-    fields: [videoCallRequests.requesterId],
-    references: [users.id],
-  }),
-}));
-
-// Insert schemas
-export const insertUserSchema = createInsertSchema(users).omit({
+export const insertListingSchema = listingSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertListingSchema = createInsertSchema(listings).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  status: true,
-  paymentIntentId: true,
+export type Listing = z.infer<typeof listingSchema>;
+export type InsertListing = z.infer<typeof insertListingSchema>;
+
+export const messageSchema = z.object({
+  id: z.number(),
+  senderId: z.string(),
+  receiverId: z.string(),
+  listingId: z.number().optional(),
+  content: z.string(),
+  createdAt: z.string(),
+  readAt: z.string().nullable(),
 });
 
-export const insertDocumentSchema = createInsertSchema(documents).omit({
+export const insertMessageSchema = messageSchema.omit({
+  id: true,
+  createdAt: true,
+  readAt: true,
+});
+
+export type Message = z.infer<typeof messageSchema>;
+export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+export const documentSchema = z.object({
+  id: z.number(),
+  userId: z.string(),
+  listingId: z.number().optional(),
+  filename: z.string(),
+  originalName: z.string(),
+  mimeType: z.string(),
+  size: z.number(),
+  uploadedAt: z.string(),
+});
+
+export const insertDocumentSchema = documentSchema.omit({
   id: true,
   uploadedAt: true,
 });
 
-export const insertMessageSchema = createInsertSchema(messages).omit({
-  id: true,
-  createdAt: true,
-  status: true,
-});
-
-export const insertVideoCallRequestSchema = createInsertSchema(videoCallRequests).omit({
-  id: true,
-  createdAt: true,
-  status: true,
-  meetingLink: true,
-});
-
-// Types
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type Listing = typeof listings.$inferSelect;
-export type InsertListing = z.infer<typeof insertListingSchema>;
-export type Document = typeof documents.$inferSelect;
+export type Document = z.infer<typeof documentSchema>;
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
-export type Conversation = typeof conversations.$inferSelect;
-export type Message = typeof messages.$inferSelect;
-export type InsertMessage = z.infer<typeof insertMessageSchema>;
-export type VideoCallRequest = typeof videoCallRequests.$inferSelect;
-export type InsertVideoCallRequest = z.infer<typeof insertVideoCallRequestSchema>;

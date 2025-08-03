@@ -1,12 +1,14 @@
+
 import { createContext, ReactNode, useContext } from "react";
 import {
   useQuery,
   useMutation,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { insertUserSchema, User as SelectUser, InsertUser } from "@shared/schema";
-import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
+import { User as SelectUser } from "@shared/schema";
+import { queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 type AuthContextType = {
   user: SelectUser | null;
@@ -14,30 +16,83 @@ type AuthContextType = {
   error: Error | null;
   loginMutation: UseMutationResult<SelectUser, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<SelectUser, Error, InsertUser>;
+  registerMutation: UseMutationResult<SelectUser, Error, RegisterData>;
 };
 
-type LoginData = Pick<InsertUser, "username" | "password">;
+type LoginData = {
+  email: string;
+  password: string;
+};
+
+type RegisterData = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: "buyer" | "investor";
+  company?: string;
+  phone?: string;
+  bio?: string;
+  preferredReturnType?: "repayment" | "equity" | "both";
+  investmentFocus?: string[];
+  preferredIndustry?: string[];
+  preferredLocation?: string;
+  preferredInvestmentRange?: string;
+};
 
 export const AuthContext = createContext<AuthContextType | null>(null);
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+
   const {
     data: user,
     error,
     isLoading,
-  } = useQuery<SelectUser | undefined, Error>({
-    queryKey: ["/api/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+  } = useQuery<SelectUser | null, Error>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) return null;
+      
+      // Get user profile from your database
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (profileError) return null;
+      return profile;
+    },
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+      
+      if (error) throw error;
+      if (!data.user) throw new Error("No user returned");
+      
+      // Get user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profileError) throw profileError;
+      return profile;
     },
     onSuccess: (user: SelectUser) => {
-      queryClient.setQueryData(["/api/user"], user);
+      queryClient.setQueryData(["user"], user);
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -49,12 +104,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (credentials: InsertUser) => {
-      const res = await apiRequest("POST", "/api/register", credentials);
-      return await res.json();
+    mutationFn: async (credentials: RegisterData) => {
+      // Sign up with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: credentials.email,
+        password: credentials.password,
+      });
+      
+      if (error) throw error;
+      if (!data.user) throw new Error("No user returned");
+      
+      // Create user profile in your database
+      const userProfile = {
+        id: data.user.id,
+        email: credentials.email,
+        first_name: credentials.firstName,
+        last_name: credentials.lastName,
+        role: credentials.role,
+        company: credentials.company || null,
+        phone: credentials.phone || null,
+        bio: credentials.bio || null,
+        preferred_return_type: credentials.preferredReturnType || null,
+        investment_focus: credentials.investmentFocus || [],
+        preferred_industry: credentials.preferredIndustry || [],
+        preferred_location: credentials.preferredLocation || null,
+        preferred_investment_range: credentials.preferredInvestmentRange || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .insert(userProfile)
+        .select()
+        .single();
+      
+      if (profileError) throw profileError;
+      return profile;
     },
     onSuccess: (user: SelectUser) => {
-      queryClient.setQueryData(["/api/user"], user);
+      queryClient.setQueryData(["user"], user);
+      toast({
+        title: "Registration successful",
+        description: "Welcome to EquityConnect!",
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -67,10 +160,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest("POST", "/api/logout");
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.setQueryData(["/api/user"], null);
+      queryClient.setQueryData(["user"], null);
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully.",
+      });
     },
     onError: (error: Error) => {
       toast({
