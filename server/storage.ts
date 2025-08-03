@@ -3,7 +3,8 @@ import { db } from "./db";
 import { eq, and, desc, asc } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
-import { pool } from "./db";
+import { sql } from "./db";
+import postgres from 'postgres';
 
 const PostgresSessionStore = connectPg(session);
 
@@ -44,8 +45,18 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
+    // Use a separate connection for session store
+    const sessionSql = postgres({
+      host: 'aws-0-us-west-1.pooler.supabase.com',
+      port: 6543,
+      database: 'postgres',
+      username: 'postgres.ltmsypooqbbhhvylqagj',
+      password: process.env.SUPABASE_DB_PASSWORD!,
+      ssl: 'require'
+    });
+    
     this.sessionStore = new PostgresSessionStore({ 
-      pool, 
+      pool: sessionSql as any, 
       createTableIfMissing: true 
     });
   }

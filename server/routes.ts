@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import { registerStorageRoutes } from "./routes/supabase-storage";
 import { insertListingSchema, insertMessageSchema, insertVideoCallRequestSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -18,6 +19,9 @@ const LISTING_FEE = 150;
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
+  
+  // Setup storage routes
+  registerStorageRoutes(app);
 
   // Listings routes
   app.post("/api/listings", async (req, res) => {

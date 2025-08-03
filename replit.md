@@ -58,7 +58,8 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Core Infrastructure
-- **Database**: Neon PostgreSQL serverless with connection pooling
+- **Database**: Supabase PostgreSQL with direct connection
+- **File Storage**: Supabase Storage for document uploads
 - **Payment Processing**: Stripe for secure payment handling and subscription management
 - **Session Storage**: PostgreSQL-backed session persistence
 
